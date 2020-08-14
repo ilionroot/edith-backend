@@ -2,6 +2,10 @@ import express from 'express';
 const app = express();
 const port = process.env.PORT | 5000;
 
+(async function () {
+  await fs.writeFile('./client/src/port.json', `{ "port": "${process.env.PORT | 5000}" }`, (err) => console.log(err));
+})();
+
 import cors from 'cors';
 import cheerio from 'cheerio';
 import axios from 'axios';
