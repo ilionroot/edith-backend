@@ -5,10 +5,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node server.js",
+    "dev": "node server.js",
     "server": "nodemon server.js",
     "client": "cd client/ && yarn start",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "start": "concurrently \"yarn server\" \"yarn client\""
   },
   "dependencies": {
     "axios": "^0.19.2",
