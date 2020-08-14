@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: space-evenly;
+
+  background-color: #FFF;
+  height: calc(100vh - 4rem);
+  width: 100vw;
+  margin-top: 4rem;
+
+  font-size: 32px;
+
+  position: relative;
+
+  font-family: cursive;
+}
+
+.container input {
+  margin: 15px;
+  border-radius: 10px;
+}
+
+.container input[type=text] {
+  border: 1.5px solid black;
+  padding: 15px;
+
+  transition: border .1s ease;
+}
+
+.container input[type=text]:focus {
+  border: 3px solid purple;
+}
+
+.container input[type=button] {
+  padding: 15px;
+  cursor: pointer;
+  border: 2px solid purple;
+  background-color: transparent;
+  color: purple;
+  transition: .1s ease;
+}
+
+.container input[type=button]:hover {
+  background-color: purple;
+  color: #fff;
+}
+
+.container h1, h5 {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.container h5 {
+  position: absolute;
+  bottom: 1rem;
+}

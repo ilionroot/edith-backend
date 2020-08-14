@@ -1,0 +1,36 @@
+.navbar-container {
+  background-color: rgb(204, 204, 204, .5);
+  width: 90vw;
+  height: 4rem;
+
+  margin-left: 5.125%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  top: 0;
+
+  z-index: 1;
+
+  border-radius: 0 0 20px 20px;
+}
+
+.navbar-container img {
+  width: 3.8rem;
+  cursor: pointer;
+}
+
+.navbar-container .link {
+  text-decoration: none;
+  color: rgba(0,0,0,.5);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+
+  transition: transform .1s ease;
+}
+
+.navbar-container .link:hover {
+  transform: scale(0.975);
+}
