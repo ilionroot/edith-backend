@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import api from '../../services/api';
+import api from "../../services/api";
 
 function Oauth() {
   async function continuar() {
-    const url = (window.location.href).replace('http://', '').split('/')[1];
+    const url = window.location.href.replace("http://", "").split("/")[1];
     console.log(url);
 
     const response = await api(url, {
-      method: "GET"
+      method: "GET",
     }); // CDz-u1uDvN_
 
     console.log(response);

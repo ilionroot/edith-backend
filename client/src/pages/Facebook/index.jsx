@@ -1,14 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import Container from '../../components/Container';
-import NavBar from '../../components/NavBar';
+import Container from "../../components/Container";
 
-import './styles.css';
+import "./styles.css";
 
 function Facebook() {
   return (
     <>
-      <NavBar />
       <Container title="Facebook" placeholder="ID do vídeo no Facebook..." />
     </>
   );
