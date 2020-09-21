@@ -103,12 +103,12 @@ h5 {
   background-repeat: no-repeat;
   background-size: contain;
 
-  transition: transform 0.3s ease;
+  transition: 0.3s ease;
   cursor: pointer;
 }
 
 .container .video .videos .block:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .container .video .infos {

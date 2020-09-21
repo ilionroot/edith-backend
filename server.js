@@ -47,7 +47,7 @@ app.get("/facebook", async (req, res) => {
 });
 
 app.post("/", async (req, res) => {
-  const { id } = req.body;
+  const { id, title, desc } = req.body;
 
   if (!id) {
     return res.json({ alert: "Please insert an id!" });
@@ -55,14 +55,13 @@ app.post("/", async (req, res) => {
 
   console.log("Fazendo busca...");
 
-  const title = await getVideo(`https://www.instagram.com/p/${id}`);
+  // const newTitle = await getVideo(`https://www.instagram.com/p/${id}`).split(
+  //   "Instagram: "
+  // )[1];
 
   try {
     save(id, `./videos/`).then(async (resp) => {
-      console.log(title);
-      const newTitle = title.split("Instagram: ")[1];
-      const { description } = req.body;
-      await fs.rename(resp.file, `./videos/${newTitle}.mp4`, () => {
+      await fs.rename(resp.file, `./videos/${title}.mp4`, () => {
         const cb = (err, video) => {};
 
         let oauth = Youtube.authenticate({
@@ -86,7 +85,7 @@ app.post("/", async (req, res) => {
           );
           oauth.getToken(code, (err, tokens) => {
             if (err) {
-              res.status(400).json({ error: "Erro: " + err });
+              res.status(400).send({ error: "Erro: " + err });
             }
 
             console.log("Got the tokens");
@@ -99,8 +98,9 @@ app.post("/", async (req, res) => {
               {
                 resource: {
                   snippet: {
-                    title: newTitle,
-                    description: description,
+                    title: title,
+                    description: desc,
+                    // thumbnails: fs.createReadStream("./banana.jpg"),
                   },
                   status: {
                     privacyStatus: "private",
@@ -108,14 +108,25 @@ app.post("/", async (req, res) => {
                 },
                 part: "snippet,status",
                 media: {
-                  body: fs.createReadStream(`./videos/${newTitle}.mp4`),
+                  body: fs.createReadStream(`./videos/${title}.mp4`),
                 },
               },
               (err, data) => {
                 if (err) {
-                  return console.log(err);
+                  return console.log({
+                    error: `Um erro ocorreu: ${err}`,
+                  });
                 }
 
+                fs.unlink(`./videos/${title}.mp4`, (err) => {
+                  if (err) {
+                    return console.log({
+                      error: `Um erro ocorreu: ${err}`,
+                    });
+                  }
+                });
+
+                console.log(data);
                 console.log("Done.");
                 spinner.stop(true);
               }
@@ -128,7 +139,7 @@ app.post("/", async (req, res) => {
       });
     });
   } catch (error) {
-    res.json({
+    res.send({
       error: `Um erro ocorreu: ${error}`,
     });
   }
@@ -245,12 +256,14 @@ app.post("/facebook", async (req, res) => {
 });
 
 app.get("/videos-instagram", async (req, res) => {
+  const access_token =
+    "IGQVJXSnZAmc1dORUE3M0E3bkt3MXpSMXQ2YlhuNXhYZA1BDQWdnMzU0ck51Q0RxaUZA4YnRkVWRMWmZAuY092M2F6MWFxY3ZASWG5kRExuckZAOcW9PdVZAmTHZA3ZA3FIWGdUd2NHMWNHS1R3";
+
   let {
-    data: { data },
+    data: { data, paging },
   } = await axios({
     method: "GET",
-    url:
-      "https://graph.instagram.com/me/media?fields=thumbnail_url,media_url,media_type,permalink&access_token=IGQVJWTXcwYWhlYWtjajR5S1ZApUjg5aDB5UDNqd3I0XzVOdEJRN29FNUlDT3JDenlxMng2b3JjTVZAnWkFuaDZADR0d6cE1ONlcwdmRkU0h3RzFKcndtdDk1clYtSlpnd19EODJXaENzMlBwcnNXenEtVGY1eGFUaFJzVWpn",
+    url: `https://graph.instagram.com/me/media?fields=thumbnail_url,media_url,media_type,permalink&access_token=${access_token}`,
   });
 
   let videos = [];
@@ -260,6 +273,28 @@ app.get("/videos-instagram", async (req, res) => {
       videos.push(post);
     }
   });
+
+  let aux = 1;
+
+  if (paging) {
+    for (let i = 0; i < aux; i++) {
+      let response = await axios({
+        method: "GET",
+        url: paging.next,
+      });
+
+      response.data.data.map((post) => {
+        if (post.media_type == "VIDEO") {
+          videos.push(post);
+        }
+      });
+
+      if (response.data.paging.next) {
+        paging.next = response.data.paging.next;
+        aux++;
+      }
+    }
+  }
 
   res.send(videos);
 });
